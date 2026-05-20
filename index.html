@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labviq — System of Record for Research Materials</title>
+  <meta name="description" content="AI-native intake and inventory for life science labs. Labviq connects physical materials to their digital records in real time.">
+  <meta property="og:title" content="Labviq — System of Record for Research Materials">
+  <meta property="og:description" content="AI-native intake and inventory for life science labs.">
+  <meta property="og:url" content="https://labviq.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --surface: #111111;
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.16);
+      --text: #FFFFFF;
+      --text-secondary: rgba(255,255,255,0.55);
+      --text-muted: rgba(255,255,255,0.28);
+      --font: 'IBM Plex Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    section {
+      padding: 120px 0;
+    }
+
+    /* ── Fade-in ── */
+    .fade {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .fade.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-delay-1 { transition-delay: 0.1s; }
+    .fade-delay-2 { transition-delay: 0.2s; }
+    .fade-delay-3 { transition-delay: 0.3s; }
+    .fade-delay-4 { transition-delay: 0.4s; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(10,10,10,0.80);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--text); }
+
+    /* ── Label ── */
+    .label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    /* ── Hero ── */
+    #hero {
+      padding: 160px 0 140px;
+    }
+    #hero .label {
+      margin-bottom: 32px;
+    }
+    .hero-h1 {
+      font-size: clamp(2.6rem, 5vw, 4rem);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+    .hero-sub {
+      font-size: 1.125rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      max-width: 700px;
+      line-height: 1.65;
+      margin-bottom: 48px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--text);
+      color: #0A0A0A;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    /* ── Section headings ── */
+    .section-h2 {
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.15;
+      max-width: 680px;
+      margin-bottom: 56px;
+    }
+
+    /* ── Cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .cards { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--border-hover); }
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+    .card-body {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* ── Problem impact strip ── */
+    .impact-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+    @media (max-width: 768px) {
+      .impact-strip { grid-template-columns: 1fr; }
+      .impact-item:not(:last-child) { border-right: none; border-bottom: 1px solid var(--border); }
+    }
+    .impact-item {
+      padding: 28px 32px;
+    }
+    .impact-item:not(:last-child) {
+      border-right: 1px solid var(--border);
+    }
+    .impact-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .impact-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ── Numbered pillars ── */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 768px) {
+      .pillars { grid-template-columns: 1fr; }
+    }
+    .pillar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      transition: border-color 0.2s;
+    }
+    .pillar:hover { border-color: var(--border-hover); }
+    .pillar-num {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .pillar-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+    .pillar-body {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    /* ── Lifecycle bar ── */
+    .lifecycle {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    @media (max-width: 600px) {
+      .lifecycle { flex-direction: column; }
+      .lifecycle-arrow { display: none; }
+      .lifecycle-stage { border-right: none !important; border-bottom: 1px solid var(--border); width: 100%; }
+    }
+    .lifecycle-stage {
+      flex: 1;
+      padding: 20px 24px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .lifecycle-stage:last-child { border-right: none; }
+    .lifecycle-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      flex-shrink: 0;
+    }
+    .lifecycle-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Why now section ── */
+    #why-now .body-text {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 600px;
+      margin-bottom: 48px;
+    }
+    .closing-line {
+      margin-top: 48px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      border-left: 2px solid rgba(255,255,255,0.20);
+      padding-left: 20px;
+      max-width: 560px;
+    }
+    .closing-line span {
+      color: var(--text);
+    }
+
+    /* ── Contact section ── */
+    #contact {
+      border-top: 1px solid var(--border);
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 80px;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+    }
+    .contact-intro-h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .contact-intro-body {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+    .contact-email {
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.01em;
+    }
+    .contact-email a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .contact-email a:hover { color: var(--text-secondary); }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 520px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    input, select, textarea {
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 6px;
+      padding: 12px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.35)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+    select option {
+      background: #1a1a1a;
+      color: var(--text);
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(255,255,255,0.35);
+    }
+    input::placeholder, textarea::placeholder {
+      color: rgba(255,255,255,0.20);
+    }
+    textarea { resize: vertical; min-height: 110px; }
+
+    .form-submit {
+      padding-top: 4px;
+    }
+    .btn-submit {
+      width: 100%;
+      justify-content: center;
+      padding: 14px 24px;
+      font-size: 14px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .footer-copy {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .footer-email {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-email:hover { color: var(--text-secondary); }
+
+    /* ── Problem ── */
+    .problem-panel {
+      margin-top: 56px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+    }
+    .problem-list-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .problem-list-item:first-child { padding-top: 0; }
+    .problem-list-item:last-child { padding-bottom: 0; border-bottom: none; }
+    .problem-list-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      flex-shrink: 0;
+    }
+    .problem-body {
+      margin-top: 32px;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 680px;
+    }
+
+    /* ── Schematic ── */
+    .schematic {
+      display: block;
+      width: 100%;
+      margin-top: 48px;
+    }
+
+    /* ── Divider ── */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ── -->
+  <nav>
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#" class="nav-logo" aria-label="Labviq">
+          <svg width="140" height="40" viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Ghost squares -->
+            <rect x="10" y="10" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+            <rect x="10" y="32" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+            <rect x="10" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+            <rect x="32" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+            <rect x="54" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+            <!-- Solid squares -->
+            <rect x="32" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <rect x="54" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <rect x="32" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <rect x="54" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <!-- Wordmark -->
+            <text x="96" y="52" font-family="IBM Plex Sans, sans-serif" font-size="36" font-weight="600" letter-spacing="-1.08" fill="#FFFFFF">Labviq</text>
+          </svg>
+        </a>
+        <a href="#contact" class="nav-link">Get in touch</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="hero">
+    <div class="container">
+      <h1 class="hero-h1 fade">System of record for research materials in life science labs</h1>
+      <p class="hero-sub fade fade-delay-2">AI-native intake and inventory for the modern lab.<br>Physical and digital, connected.</p>
+      <a href="#contact" class="btn fade fade-delay-3">Get in touch &rarr;</a>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ── Problem ── -->
+  <section id="problem">
+    <div class="container">
+      <h2 class="section-h2 fade">Materials move through the lab, but their records do not.</h2>
+      <p class="problem-body fade fade-delay-1">Lab records are built manually from scattered sources, while materials move through workflows without a connected digital trail — gaps that compound across compliance, reproducibility, and cost.</p>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ── Solution ── -->
+  <section id="solution">
+    <div class="container">
+      <h2 class="section-h2 fade">A system of record for the entire lifecycle, where physical and digital stay connected.</h2>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ── Why Now ── -->
+  <section id="why-now">
+    <div class="container">
+      <h2 class="section-h2 fade">The wet lab has been the slowest to adopt AI. The shift has started.</h2>
+      <p class="closing-line fade fade-delay-2">No one has built the complete system of record. <span>That is what we are building.</span></p>
+    </div>
+  </section>
+
+  <!-- ── Contact ── -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="fade fade-delay-1">
+          <h2 class="contact-intro-h2">We're talking to labs, researchers, and investors.</h2>
+          <p class="contact-intro-body">If you work in a lab, invest in life science, or are curious about what we're building — we'd like to hear from you.</p>
+          <p class="contact-email">Or reach us directly at <a href="mailto:hello@labviq.com">hello@labviq.com</a></p>
+        </div>
+        <div class="fade fade-delay-2">
+          <!-- Replace YOUR_FORM_ID with your Formspree form ID — free at formspree.io -->
+          <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <div class="form-row">
+              <div class="field">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Your name" required>
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="role">I am</label>
+              <select id="role" name="role" required>
+                <option value="" disabled selected>Select your role</option>
+                <option value="lab-researcher">A lab / researcher</option>
+                <option value="investor">An investor</option>
+                <option value="press">A journalist / press</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="4" placeholder="Tell us about your lab, your interest, or what you'd like to know…"></textarea>
+            </div>
+            <div class="form-submit">
+              <button type="submit" class="btn btn-submit">Send message</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <svg width="28" height="28" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="10" y="10" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+            <rect x="10" y="32" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+            <rect x="10" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+            <rect x="32" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+            <rect x="54" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+            <rect x="32" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <rect x="54" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <rect x="32" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <rect x="54" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
+          </svg>
+          <span class="footer-copy">&copy; 2026 Labviq</span>
+        </div>
+        <a href="mailto:hello@labviq.com" class="footer-email">hello@labviq.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
