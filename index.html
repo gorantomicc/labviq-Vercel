@@ -574,8 +574,10 @@
           <p class="contact-email">Or reach us directly at <a href="mailto:hello@labviq.com">hello@labviq.com</a></p>
         </div>
         <div class="fade fade-delay-2">
-          <!-- Replace YOUR_FORM_ID with your Formspree form ID — free at formspree.io -->
-          <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <form action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="7d3a52ca-f7e3-474d-a13b-144ad9bf1049">
+            <input type="hidden" name="subject" value="New message — Labviq">
+            <input type="hidden" name="redirect" value="false">
             <div class="form-row">
               <div class="field">
                 <label for="name">Name</label>
