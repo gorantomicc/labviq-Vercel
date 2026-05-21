@@ -10,21 +10,43 @@
   <meta property="og:url" content="https://labviq.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
+      /* ── Surface ── */
       --bg: #0A0A0A;
       --surface: #111111;
-      --border: rgba(255,255,255,0.08);
-      --border-hover: rgba(255,255,255,0.16);
+      --surface-soft: rgba(255, 255, 255, 0.04);
+
+      /* ── Border ── */
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --border-focus: rgba(255, 255, 255, 0.35);
+
+      /* ── Text ── */
       --text: #FFFFFF;
-      --text-secondary: rgba(255,255,255,0.55);
-      --text-muted: rgba(255,255,255,0.28);
+      --text-secondary: rgba(255, 255, 255, 0.55);
+      --text-muted: rgba(255, 255, 255, 0.28);
+
+      /* ── Accent ── */
       --accent: #8E94A0;
       --accent-soft: rgba(142, 148, 160, 0.18);
+
+      /* ── Nav overlays (high-opacity panels over hero gradient) ── */
+      --nav-bg: rgba(10, 10, 10, 0.80);
+      --nav-bg-scrolled: rgba(10, 10, 10, 0.72);
+
+      /* ── Typography ── */
       --font: 'IBM Plex Sans', sans-serif;
+      --tracking-display: -0.025em;
+      --tracking-tight: -0.01em;
+      --tracking-eyebrow: 0.12em;
+
+      /* ── Layout ── */
+      --width-page: 1080px;
+      --width-content: 920px;
     }
 
     html { scroll-behavior: smooth; }
@@ -39,7 +61,7 @@
 
     /* ── Layout ── */
     .container {
-      max-width: 1080px;
+      max-width: var(--width-page);
       margin: 0 auto;
       padding: 0 32px;
     }
@@ -88,10 +110,10 @@
 
     /* Sticky nav gains a subtle elevation once user scrolls */
     nav.scrolled {
-      background: rgba(10, 10, 10, 0.72);
+      background: var(--nav-bg-scrolled);
       backdrop-filter: saturate(140%) blur(10px);
       -webkit-backdrop-filter: saturate(140%) blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid var(--border);
     }
     nav { transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease; }
 
@@ -111,7 +133,7 @@
       border-bottom: 1px solid var(--border);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      background: rgba(10,10,10,0.80);
+      background: var(--nav-bg);
     }
     .nav-inner {
       display: flex;
@@ -129,16 +151,15 @@
       font-weight: 600;
       color: var(--text);
       text-decoration: none;
-      letter-spacing: 0.01em;
       transition: opacity 0.2s;
     }
     .nav-link:hover { opacity: 0.75; }
 
-    /* ── Label ── */
+    /* ── Eyebrow label (shared: section labels, card num, etc.) ── */
     .label {
       font-size: 11px;
       font-weight: 500;
-      letter-spacing: 0.12em;
+      letter-spacing: var(--tracking-eyebrow);
       text-transform: uppercase;
       color: var(--text-muted);
       margin-bottom: 24px;
@@ -169,15 +190,23 @@
       font-size: clamp(2.75rem, 5.5vw, 4.5rem);
       font-weight: 600;
       line-height: 1.2;
-      letter-spacing: -0.03em;
-      max-width: 940px;
+      letter-spacing: var(--tracking-display);
+      max-width: var(--width-content);
       margin-bottom: 56px;
+      text-wrap: balance;
+    }
+    @media (max-width: 600px) {
+      .hero-h1 {
+        font-size: clamp(1.75rem, 8vw, 2.75rem);
+        line-height: 1.15;
+        margin-bottom: 40px;
+      }
     }
     .hero-sub {
       font-size: clamp(1.75rem, 2.6vw, 2.25rem);
       font-weight: 500;
       color: var(--text);
-      max-width: 920px;
+      max-width: var(--width-content);
       line-height: 1.4;
       margin-bottom: 48px;
     }
@@ -190,8 +219,7 @@
       font-family: var(--font);
       font-size: 15px;
       font-weight: 600;
-      letter-spacing: 0.01em;
-      padding: 14px 28px;
+      padding: 14px 24px;
       border-radius: 6px;
       text-decoration: none;
       border: none;
@@ -206,9 +234,9 @@
     .section-h2 {
       font-size: clamp(1.75rem, 3.5vw, 2.5rem);
       font-weight: 600;
-      letter-spacing: -0.025em;
+      letter-spacing: var(--tracking-display);
       line-height: 1.15;
-      max-width: 680px;
+      max-width: var(--width-content);
       margin-bottom: 56px;
     }
     .solution-row {
@@ -216,24 +244,22 @@
       align-items: center;
       justify-content: space-between;
       gap: 40px;
-      max-width: 920px;
+      max-width: var(--width-content);
     }
     .solution-row .section-h2 {
       margin-bottom: 0;
+      max-width: none;
+      flex: 1 1 auto;
     }
     .solution-mark {
       flex-shrink: 0;
-    }
-    .solution-row .section-h2 {
-      max-width: none;
-      flex: 1 1 auto;
     }
     @media (max-width: 768px) {
       .solution-row { flex-direction: column; align-items: flex-start; gap: 32px; }
       .solution-mark { width: 160px; height: 160px; }
     }
 
-    /* ── Cards ── */
+    /* ── Card (unified card/pillar pattern) ── */
     .cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -249,27 +275,24 @@
       padding: 32px;
       transition: border-color 0.2s;
     }
-    .card:hover { border-color: var(--border-hover); }
+    .card:hover { border-color: var(--border-strong); }
     .card-title {
       font-size: 15px;
       font-weight: 600;
+      letter-spacing: var(--tracking-tight);
       margin-bottom: 12px;
-      letter-spacing: -0.01em;
     }
     .card-body {
       font-size: 14px;
       color: var(--text-secondary);
       line-height: 1.65;
     }
-
-    /* ── Problem impact strip ── */
-    .impact-intro {
-      font-size: 1.375rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 24px;
-      letter-spacing: -0.01em;
+    /* Optional eyebrow number inside a card — uses .label */
+    .card .label {
+      margin-bottom: 20px;
     }
+
+    /* ── Impact strip ── */
     .impact-strip {
       display: flex;
       flex-direction: column;
@@ -277,7 +300,7 @@
       border-radius: 12px;
       overflow: hidden;
       background: var(--surface);
-      max-width: 920px;
+      max-width: var(--width-content);
     }
     .impact-item {
       display: grid;
@@ -297,57 +320,17 @@
       }
     }
     .impact-label {
-      font-size: 26px;
+      font-size: clamp(1.125rem, 2.5vw, 1.5rem);
       font-weight: 700;
-      letter-spacing: 0.12em;
+      letter-spacing: var(--tracking-eyebrow);
       text-transform: uppercase;
       color: var(--text);
-      margin: 0;
     }
     .impact-desc {
-      font-size: 1.375rem;
+      font-size: clamp(1.125rem, 2vw, 1.375rem);
       color: var(--text);
       line-height: 1.45;
       font-weight: 400;
-      margin: 0;
-      letter-spacing: -0.005em;
-    }
-
-    /* ── Numbered pillars ── */
-    .pillars {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 48px;
-    }
-    @media (max-width: 768px) {
-      .pillars { grid-template-columns: 1fr; }
-    }
-    .pillar {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 32px;
-      transition: border-color 0.2s;
-    }
-    .pillar:hover { border-color: var(--border-hover); }
-    .pillar-num {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      margin-bottom: 20px;
-    }
-    .pillar-title {
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      margin-bottom: 12px;
-    }
-    .pillar-body {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.65;
     }
 
     /* ── Lifecycle bar ── */
@@ -377,14 +360,13 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.35);
+      background: var(--text-muted);
       flex-shrink: 0;
     }
     .lifecycle-name {
       font-size: 13px;
       font-weight: 500;
       color: var(--text-secondary);
-      letter-spacing: 0.01em;
     }
 
     /* ── Why now section ── */
@@ -392,7 +374,7 @@
       font-size: 1rem;
       color: var(--text-secondary);
       line-height: 1.7;
-      max-width: 600px;
+      max-width: var(--width-content);
       margin-bottom: 48px;
     }
     .closing-line {
@@ -401,9 +383,9 @@
       font-weight: 500;
       color: var(--text-secondary);
       line-height: 1.65;
-      border-left: 2px solid rgba(255,255,255,0.20);
+      border-left: 2px solid var(--border-strong);
       padding-left: 20px;
-      max-width: 560px;
+      max-width: var(--width-content);
     }
     .closing-line span {
       color: var(--text);
@@ -418,7 +400,7 @@
       grid-template-columns: 1fr;
       gap: 56px;
       align-items: start;
-      max-width: 920px;
+      max-width: var(--width-content);
     }
     @media (max-width: 768px) {
       .contact-grid { gap: 40px; }
@@ -426,27 +408,10 @@
     .contact-intro-h2 {
       font-size: clamp(1.5rem, 3vw, 2rem);
       font-weight: 600;
-      letter-spacing: -0.025em;
+      letter-spacing: var(--tracking-display);
       line-height: 1.2;
       margin-bottom: 20px;
     }
-    .contact-intro-body {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 32px;
-    }
-    .contact-email {
-      font-size: 13px;
-      color: var(--text-muted);
-      letter-spacing: 0.01em;
-    }
-    .contact-email a {
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .contact-email a:hover { color: var(--text-secondary); }
 
     form {
       display: flex;
@@ -478,8 +443,8 @@
       font-family: var(--font);
       font-size: 14px;
       color: var(--text);
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.10);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
       border-radius: 6px;
       padding: 12px 16px;
       outline: none;
@@ -489,7 +454,7 @@
       appearance: none;
     }
     select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.35)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.55)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 14px center;
       padding-right: 36px;
@@ -500,10 +465,10 @@
       color: var(--text);
     }
     input:focus, select:focus, textarea:focus {
-      border-color: rgba(255,255,255,0.35);
+      border-color: var(--border-focus);
     }
     input::placeholder, textarea::placeholder {
-      color: rgba(255,255,255,0.20);
+      color: var(--text-muted);
     }
     textarea { resize: vertical; min-height: 110px; }
 
@@ -527,102 +492,47 @@
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 20px;
+      gap: 24px;
     }
     .footer-left {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 24px;
     }
     .footer-copy {
       font-size: 13px;
       color: var(--text-muted);
     }
-    .footer-email {
-      font-size: 13px;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-email:hover { color: var(--text-secondary); }
 
     /* ── Problem ── */
-    .problem-panel {
-      margin-top: 56px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 32px;
-    }
-    .problem-list-item {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 15px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--text-secondary);
-    }
-    .problem-list-item:first-child { padding-top: 0; }
-    .problem-list-item:last-child { padding-bottom: 0; border-bottom: none; }
-    .problem-list-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.18);
-      flex-shrink: 0;
-    }
-    .problem-body {
-      margin-top: 32px;
-      font-size: 1rem;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      max-width: 680px;
-    }
     .problem-points {
       margin-top: 32px;
       display: flex;
       flex-direction: column;
       gap: 36px;
-      max-width: 820px;
+      max-width: var(--width-content);
     }
     .problem-point {
       font-size: clamp(1.375rem, 2.2vw, 1.75rem);
       font-weight: 500;
       color: var(--text);
       line-height: 1.3;
-      letter-spacing: -0.015em;
-    }
-
-    /* ── Schematic ── */
-    .schematic {
-      display: block;
-      width: 100%;
-      margin-top: 48px;
+      letter-spacing: var(--tracking-tight);
     }
 
     /* ── Divider ── */
     .section-divider {
       border: none;
       height: 1px;
-      background: linear-gradient(to right, transparent, rgba(255,255,255,0.10) 30%, rgba(255,255,255,0.10) 70%, transparent);
-      max-width: 1080px;
+      background: linear-gradient(to right, transparent, var(--border) 30%, var(--border) 70%, transparent);
+      max-width: var(--width-page);
       margin: 0 auto;
     }
+
     /* Subtle alternating section tones */
     #impact, #contact {
       background: linear-gradient(to bottom, rgba(255,255,255,0.012), rgba(255,255,255,0));
     }
-
-    /* ── Footer right ── */
-    .footer-right {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-    .onstage-badge { height: 48px; width: auto; opacity: 0.85; transition: opacity 0.2s; }
-    .onstage-badge:hover { opacity: 1; }
   </style>
 </head>
 <body>
@@ -634,11 +544,11 @@
         <a href="#" class="nav-logo" aria-label="Labviq">
           <svg width="140" height="40" viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <!-- Ghost squares -->
-            <rect x="10" y="10" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
-            <rect x="10" y="32" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
-            <rect x="10" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
-            <rect x="32" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
-            <rect x="54" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+            <rect x="10" y="10" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="10" y="32" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="10" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="32" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="54" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
             <!-- Solid squares -->
             <rect x="32" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
             <rect x="54" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
@@ -648,7 +558,7 @@
             <text x="96" y="52" font-family="IBM Plex Sans, sans-serif" font-size="36" font-weight="600" letter-spacing="-1.08" fill="#FFFFFF">Labviq</text>
           </svg>
         </a>
-        <a href="#contact" class="nav-link">Get in touch</a>
+        <a href="#contact" class="nav-link">Stay in the loop</a>
       </div>
     </div>
   </nav>
@@ -656,9 +566,8 @@
   <!-- ── Hero ── -->
   <section id="hero">
     <div class="container">
-      <h1 class="hero-h1 fade">Creating traceability through the entire lifecycle of research materials</h1>
-      <p class="hero-sub fade fade-delay-2">System of record for reagents in life science labs</p>
-      <a href="#contact" class="btn fade fade-delay-3">Get in touch &rarr;</a>
+      <h1 class="hero-h1 fade">System of record for research materials in life science labs</h1>
+      <a href="#contact" class="btn fade fade-delay-2">Stay in the loop &rarr;</a>
     </div>
   </section>
 
@@ -670,8 +579,8 @@
       <h2 class="section-h2 fade">Materials move through the lab, but their records do not.</h2>
       <div class="problem-points">
         <p class="problem-point fade fade-delay-1">Intake is mainly manual</p>
-        <p class="problem-point fade fade-delay-2">Information is scattered</p>
-        <p class="problem-point fade fade-delay-3">Physical and digital do not connect</p>
+        <p class="problem-point fade fade-delay-2">Records start incomplete</p>
+        <p class="problem-point fade fade-delay-3">Physical and digital don't meet</p>
       </div>
     </div>
   </section>
@@ -681,7 +590,7 @@
   <!-- ── Impact ── -->
   <section id="impact">
     <div class="container">
-      <h2 class="section-h2 fade">This impacts</h2>
+      <h2 class="section-h2 fade">The impact</h2>
       <div class="impact-strip stagger">
         <div class="impact-item">
           <div class="impact-label">Compliance</div>
@@ -693,7 +602,7 @@
         </div>
         <div class="impact-item">
           <div class="impact-label">Cost</div>
-          <p class="impact-desc">Duplicate buys. Expired stock. Wasted spend.</p>
+          <p class="impact-desc">Duplicate buys. Expired stock.</p>
         </div>
       </div>
     </div>
@@ -705,14 +614,14 @@
   <section id="solution">
     <div class="container">
       <div class="solution-row">
-        <h2 class="section-h2 fade">Labviq is the solution that we are building</h2>
+        <h2 class="section-h2 fade">Labviq is the solution that we are building.</h2>
         <svg class="solution-mark fade fade-delay-1" width="200" height="200" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <!-- Ghost squares -->
-          <rect x="10" y="10" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
-          <rect x="10" y="32" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
-          <rect x="10" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
-          <rect x="32" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
-          <rect x="54" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+          <rect x="10" y="10" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+          <rect x="10" y="32" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+          <rect x="10" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+          <rect x="32" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+          <rect x="54" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
           <!-- Solid squares -->
           <rect x="32" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
           <rect x="54" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
@@ -728,13 +637,11 @@
     <div class="container">
       <div class="contact-grid">
         <div class="fade fade-delay-1">
-          <h2 class="contact-intro-h2">Sign up to get updates on our launch</h2>
+          <h2 class="contact-intro-h2">Get updates as we launch.</h2>
         </div>
         <div class="fade fade-delay-2">
-          <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
-            <input type="hidden" name="access_key" value="7d3a52ca-f7e3-474d-a13b-144ad9bf1049">
-            <input type="hidden" name="subject" value="New message — Labviq">
-            <input type="hidden" name="redirect" value="false">
+          <!-- Replace YOUR_FORM_ID with your Formspree form ID — free at formspree.io -->
+          <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
             <div class="form-row">
               <div class="field">
                 <label for="name">Name</label>
@@ -765,9 +672,8 @@
               <textarea id="message" name="message" rows="4"></textarea>
             </div>
             <div class="form-submit">
-              <button type="submit" class="btn btn-submit" id="submit-btn">Send message</button>
+              <button type="submit" class="btn btn-submit">Send message</button>
             </div>
-            <p id="form-status" style="margin-top:14px;font-size:13px;display:none;"></p>
           </form>
         </div>
       </div>
@@ -780,22 +686,17 @@
       <div class="footer-inner">
         <div class="footer-left">
           <svg width="28" height="28" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect x="10" y="10" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
-            <rect x="10" y="32" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
-            <rect x="10" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
-            <rect x="32" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
-            <rect x="54" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+            <rect x="10" y="10" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="10" y="32" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="10" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="32" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="54" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
             <rect x="32" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
             <rect x="54" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
             <rect x="32" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
             <rect x="54" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
           </svg>
           <span class="footer-copy">&copy; 2026 Labviq</span>
-        </div>
-        <div class="footer-right">
-          <a href="https://onstage-shortlist.com/" target="_blank" rel="noopener">
-            <img src="onstage-badge.png" class="onstage-badge" alt="Onstage S26 Top 100">
-          </a>
         </div>
       </div>
     </div>
@@ -850,39 +751,6 @@
       otherField.hidden = !isOther;
       otherInput.required = isOther;
       if (!isOther) otherInput.value = '';
-    });
-
-    // Web3Forms async submission
-    const contactForm = document.getElementById('contact-form');
-    const submitBtn  = document.getElementById('submit-btn');
-    const formStatus = document.getElementById('form-status');
-    contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending…';
-      formStatus.style.display = 'none';
-      try {
-        const res  = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          body: new FormData(contactForm)
-        });
-        const data = await res.json();
-        if (data.success) {
-          formStatus.textContent = 'Message sent — we\'ll be in touch.';
-          formStatus.style.color = 'rgba(255,255,255,0.55)';
-          contactForm.reset();
-          otherField.hidden = true;
-        } else {
-          throw new Error(data.message || 'Submission failed');
-        }
-      } catch (err) {
-        formStatus.textContent = 'Something went wrong. Please email hello@labviq.com directly.';
-        formStatus.style.color = 'rgba(255,100,100,0.8)';
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send message';
-        formStatus.style.display = 'block';
-      }
     });
   </script>
 
