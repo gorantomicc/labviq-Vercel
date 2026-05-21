@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Labviq — System of Record for Research Materials</title>
+  <title>Labviq, System of Record for Research Materials</title>
   <meta name="description" content="AI-native intake and inventory for life science labs. Labviq connects physical materials to their digital records in real time.">
-  <meta property="og:title" content="Labviq — System of Record for Research Materials">
+  <meta property="og:title" content="Labviq, System of Record for Research Materials">
   <meta property="og:description" content="AI-native intake and inventory for life science labs.">
   <meta property="og:url" content="https://labviq.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,6 +22,8 @@
       --text: #FFFFFF;
       --text-secondary: rgba(255,255,255,0.55);
       --text-muted: rgba(255,255,255,0.28);
+      --accent: #8E94A0;
+      --accent-soft: rgba(142, 148, 160, 0.18);
       --font: 'IBM Plex Sans', sans-serif;
     }
 
@@ -49,17 +51,57 @@
     /* ── Fade-in ── */
     .fade {
       opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: translateY(24px);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
     }
     .fade.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    .fade-delay-1 { transition-delay: 0.1s; }
-    .fade-delay-2 { transition-delay: 0.2s; }
-    .fade-delay-3 { transition-delay: 0.3s; }
-    .fade-delay-4 { transition-delay: 0.4s; }
+    .fade-delay-1 { transition-delay: 0.08s; }
+    .fade-delay-2 { transition-delay: 0.16s; }
+    .fade-delay-3 { transition-delay: 0.24s; }
+    .fade-delay-4 { transition-delay: 0.32s; }
+
+    /* Staggered children (impact rows) */
+    .stagger > * {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .stagger.visible > * { opacity: 1; transform: translateY(0); }
+    .stagger.visible > *:nth-child(1) { transition-delay: 0.05s; }
+    .stagger.visible > *:nth-child(2) { transition-delay: 0.18s; }
+    .stagger.visible > *:nth-child(3) { transition-delay: 0.31s; }
+    .stagger.visible > *:nth-child(4) { transition-delay: 0.44s; }
+
+    /* Hero parallax-ish drift */
+    .parallax-slow { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
+
+    /* Brand mark gentle float */
+    @keyframes solution-float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+    .solution-mark.visible { animation: solution-float 6s ease-in-out infinite; }
+
+    /* Sticky nav gains a subtle elevation once user scrolls */
+    nav.scrolled {
+      background: rgba(10, 10, 10, 0.72);
+      backdrop-filter: saturate(140%) blur(10px);
+      -webkit-backdrop-filter: saturate(140%) blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    nav { transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade, .stagger > *, .parallax-slow { transition: none !important; transform: none !important; }
+      .fade { opacity: 1; }
+      .stagger > * { opacity: 1; }
+      .solution-mark.visible { animation: none; }
+      nav { transition: none; }
+    }
 
     /* ── Nav ── */
     nav {
@@ -83,14 +125,14 @@
       text-decoration: none;
     }
     .nav-link {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-secondary);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
       text-decoration: none;
       letter-spacing: 0.01em;
-      transition: color 0.2s;
+      transition: opacity 0.2s;
     }
-    .nav-link:hover { color: var(--text); }
+    .nav-link:hover { opacity: 0.75; }
 
     /* ── Label ── */
     .label {
@@ -105,44 +147,59 @@
     /* ── Hero ── */
     #hero {
       padding: 160px 0 140px;
+      position: relative;
+      overflow: hidden;
     }
+    #hero::before {
+      content: "";
+      position: absolute;
+      inset: -10% -10% auto -10%;
+      height: 90%;
+      background:
+        radial-gradient(60% 70% at 25% 25%, rgba(142,148,160,0.10), transparent 70%),
+        radial-gradient(50% 60% at 80% 0%, rgba(142,148,160,0.06), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    #hero > .container { position: relative; z-index: 1; }
     #hero .label {
       margin-bottom: 32px;
     }
     .hero-h1 {
-      font-size: clamp(2.6rem, 5vw, 4rem);
+      font-size: clamp(2.75rem, 5.5vw, 4.5rem);
       font-weight: 600;
-      line-height: 1.1;
+      line-height: 1.2;
       letter-spacing: -0.03em;
-      max-width: 720px;
-      margin-bottom: 28px;
+      max-width: 940px;
+      margin-bottom: 56px;
     }
     .hero-sub {
-      font-size: 1.125rem;
-      font-weight: 400;
-      color: var(--text-secondary);
-      max-width: 700px;
-      line-height: 1.65;
+      font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+      font-weight: 500;
+      color: var(--text);
+      max-width: 920px;
+      line-height: 1.4;
       margin-bottom: 48px;
     }
     .btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: var(--text);
+      background: var(--accent);
       color: #0A0A0A;
       font-family: var(--font);
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       letter-spacing: 0.01em;
-      padding: 12px 24px;
+      padding: 14px 28px;
       border-radius: 6px;
       text-decoration: none;
       border: none;
       cursor: pointer;
-      transition: opacity 0.2s, transform 0.15s;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+      box-shadow: 0 0 0 0 var(--accent-soft);
     }
-    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn:hover { background: #A1A6B0; transform: translateY(-1px); box-shadow: 0 8px 24px -8px var(--accent-soft); }
     .btn:active { transform: translateY(0); }
 
     /* ── Section headings ── */
@@ -153,6 +210,27 @@
       line-height: 1.15;
       max-width: 680px;
       margin-bottom: 56px;
+    }
+    .solution-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      max-width: 920px;
+    }
+    .solution-row .section-h2 {
+      margin-bottom: 0;
+    }
+    .solution-mark {
+      flex-shrink: 0;
+    }
+    .solution-row .section-h2 {
+      max-width: none;
+      flex: 1 1 auto;
+    }
+    @media (max-width: 768px) {
+      .solution-row { flex-direction: column; align-items: flex-start; gap: 32px; }
+      .solution-mark { width: 160px; height: 160px; }
     }
 
     /* ── Cards ── */
@@ -185,37 +263,54 @@
     }
 
     /* ── Problem impact strip ── */
-    .impact-strip {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      margin-top: 16px;
-      overflow: hidden;
+    .impact-intro {
+      font-size: 1.375rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 24px;
+      letter-spacing: -0.01em;
     }
-    @media (max-width: 768px) {
-      .impact-strip { grid-template-columns: 1fr; }
-      .impact-item:not(:last-child) { border-right: none; border-bottom: 1px solid var(--border); }
+    .impact-strip {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--surface);
+      max-width: 920px;
     }
     .impact-item {
-      padding: 28px 32px;
+      display: grid;
+      grid-template-columns: minmax(240px, 320px) 1fr;
+      align-items: baseline;
+      gap: 56px;
+      padding: 48px 56px;
     }
     .impact-item:not(:last-child) {
-      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    @media (max-width: 768px) {
+      .impact-item {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 32px 28px;
+      }
     }
     .impact-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 10px;
+      color: var(--text);
+      margin: 0;
     }
     .impact-desc {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.6;
+      font-size: 1.375rem;
+      color: var(--text);
+      line-height: 1.45;
+      font-weight: 400;
+      margin: 0;
+      letter-spacing: -0.005em;
     }
 
     /* ── Numbered pillars ── */
@@ -320,12 +415,13 @@
     }
     .contact-grid {
       display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 80px;
+      grid-template-columns: 1fr;
+      gap: 56px;
       align-items: start;
+      max-width: 920px;
     }
     @media (max-width: 768px) {
-      .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+      .contact-grid { gap: 40px; }
     }
     .contact-intro-h2 {
       font-size: clamp(1.5rem, 3vw, 2rem);
@@ -370,6 +466,7 @@
       flex-direction: column;
       gap: 6px;
     }
+    .field[hidden] { display: none; }
     label {
       font-size: 12px;
       font-weight: 500;
@@ -448,18 +545,6 @@
       transition: color 0.2s;
     }
     .footer-email:hover { color: var(--text-secondary); }
-    .footer-right {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-    .onstage-badge {
-      height: 56px;
-      width: auto;
-      opacity: 0.85;
-      transition: opacity 0.2s;
-    }
-    .onstage-badge:hover { opacity: 1; }
 
     /* ── Problem ── */
     .problem-panel {
@@ -495,6 +580,20 @@
       line-height: 1.7;
       max-width: 680px;
     }
+    .problem-points {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+      max-width: 820px;
+    }
+    .problem-point {
+      font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+    }
 
     /* ── Schematic ── */
     .schematic {
@@ -506,8 +605,24 @@
     /* ── Divider ── */
     .section-divider {
       border: none;
-      border-top: 1px solid var(--border);
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.10) 30%, rgba(255,255,255,0.10) 70%, transparent);
+      max-width: 1080px;
+      margin: 0 auto;
     }
+    /* Subtle alternating section tones */
+    #impact, #contact {
+      background: linear-gradient(to bottom, rgba(255,255,255,0.012), rgba(255,255,255,0));
+    }
+
+    /* ── Footer right ── */
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .onstage-badge { height: 48px; width: auto; opacity: 0.85; transition: opacity 0.2s; }
+    .onstage-badge:hover { opacity: 1; }
   </style>
 </head>
 <body>
@@ -541,8 +656,8 @@
   <!-- ── Hero ── -->
   <section id="hero">
     <div class="container">
-      <h1 class="hero-h1 fade">System of record for research materials in life science labs</h1>
-      <p class="hero-sub fade fade-delay-2">AI-native intake and inventory for the modern lab.<br>Physical and digital, connected.</p>
+      <h1 class="hero-h1 fade">Creating traceability through the entire lifecycle of research materials</h1>
+      <p class="hero-sub fade fade-delay-2">System of record for reagents in life science labs</p>
       <a href="#contact" class="btn fade fade-delay-3">Get in touch &rarr;</a>
     </div>
   </section>
@@ -553,7 +668,34 @@
   <section id="problem">
     <div class="container">
       <h2 class="section-h2 fade">Materials move through the lab, but their records do not.</h2>
-      <p class="problem-body fade fade-delay-1">Lab records are built manually from scattered sources, while materials move through workflows without a connected digital trail — gaps that compound across compliance, reproducibility, and cost.</p>
+      <div class="problem-points">
+        <p class="problem-point fade fade-delay-1">Intake is mainly manual</p>
+        <p class="problem-point fade fade-delay-2">Information is scattered</p>
+        <p class="problem-point fade fade-delay-3">Physical and digital do not connect</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ── Impact ── -->
+  <section id="impact">
+    <div class="container">
+      <h2 class="section-h2 fade">This impacts</h2>
+      <div class="impact-strip stagger">
+        <div class="impact-item">
+          <div class="impact-label">Compliance</div>
+          <p class="impact-desc">Failed audits. Delayed milestones.</p>
+        </div>
+        <div class="impact-item">
+          <div class="impact-label">Reproducibility</div>
+          <p class="impact-desc">Lost work. Unrepeatable results.</p>
+        </div>
+        <div class="impact-item">
+          <div class="impact-label">Cost</div>
+          <p class="impact-desc">Duplicate buys. Expired stock. Wasted spend.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -562,17 +704,22 @@
   <!-- ── Solution ── -->
   <section id="solution">
     <div class="container">
-      <h2 class="section-h2 fade">A system of record for the entire lifecycle, where physical and digital stay connected.</h2>
-    </div>
-  </section>
-
-  <hr class="section-divider">
-
-  <!-- ── Why Now ── -->
-  <section id="why-now">
-    <div class="container">
-      <h2 class="section-h2 fade">The wet lab has been the slowest to adopt AI. The shift has started.</h2>
-      <p class="closing-line fade fade-delay-2">No one has built the complete system of record. <span>That is what we are building.</span></p>
+      <div class="solution-row">
+        <h2 class="section-h2 fade">Labviq is the solution that we are building</h2>
+        <svg class="solution-mark fade fade-delay-1" width="200" height="200" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- Ghost squares -->
+          <rect x="10" y="10" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+          <rect x="10" y="32" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+          <rect x="10" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+          <rect x="32" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+          <rect x="54" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="2"/>
+          <!-- Solid squares -->
+          <rect x="32" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
+          <rect x="54" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
+          <rect x="32" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
+          <rect x="54" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
+        </svg>
+      </div>
     </div>
   </section>
 
@@ -581,42 +728,46 @@
     <div class="container">
       <div class="contact-grid">
         <div class="fade fade-delay-1">
-          <h2 class="contact-intro-h2">We're talking to labs, researchers, and investors.</h2>
-          <p class="contact-intro-body">If you work in a lab, invest in life science, or are curious about what we're building — we'd like to hear from you.</p>
-          <p class="contact-email">Or reach us directly at <a href="mailto:hello@labviq.com">hello@labviq.com</a></p>
+          <h2 class="contact-intro-h2">Sign up to get updates on our launch</h2>
         </div>
         <div class="fade fade-delay-2">
-          <form action="https://api.web3forms.com/submit" method="POST">
+          <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
             <input type="hidden" name="access_key" value="7d3a52ca-f7e3-474d-a13b-144ad9bf1049">
             <input type="hidden" name="subject" value="New message — Labviq">
             <input type="hidden" name="redirect" value="false">
             <div class="form-row">
               <div class="field">
                 <label for="name">Name</label>
-                <input type="text" id="name" name="name" placeholder="Your name" required>
+                <input type="text" id="name" name="name" required>
               </div>
               <div class="field">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                <label for="email">Work email</label>
+                <input type="email" id="email" name="email" required>
               </div>
             </div>
             <div class="field">
-              <label for="role">I am</label>
-              <select id="role" name="role" required>
-                <option value="" disabled selected>Select your role</option>
-                <option value="lab-researcher">A lab / researcher</option>
-                <option value="investor">An investor</option>
-                <option value="press">A journalist / press</option>
+              <label for="industry">Industry</label>
+              <select id="industry" name="industry" required>
+                <option value="" disabled selected></option>
+                <option value="academia">Academia</option>
+                <option value="biotech">Biotech</option>
+                <option value="pharmaceuticals">Pharmaceuticals</option>
+                <option value="venture-capital">Venture capital</option>
                 <option value="other">Other</option>
               </select>
             </div>
+            <div class="field" id="industry-other-field" hidden>
+              <label for="industry_other">Please specify</label>
+              <input type="text" id="industry_other" name="industry_other">
+            </div>
             <div class="field">
-              <label for="message">Message</label>
-              <textarea id="message" name="message" rows="4" placeholder="Tell us about your lab, your interest, or what you'd like to know…"></textarea>
+              <label for="message">Message (optional)</label>
+              <textarea id="message" name="message" rows="4"></textarea>
             </div>
             <div class="form-submit">
-              <button type="submit" class="btn btn-submit">Send message</button>
+              <button type="submit" class="btn btn-submit" id="submit-btn">Send message</button>
             </div>
+            <p id="form-status" style="margin-top:14px;font-size:13px;display:none;"></p>
           </form>
         </div>
       </div>
@@ -643,7 +794,7 @@
         </div>
         <div class="footer-right">
           <a href="https://onstage-shortlist.com/" target="_blank" rel="noopener">
-            <img src="onstage-badge.png" alt="Onstage Top 100" class="onstage-badge">
+            <img src="onstage-badge.png" class="onstage-badge" alt="Onstage S26 Top 100">
           </a>
           <a href="mailto:hello@labviq.com" class="footer-email">hello@labviq.com</a>
         </div>
@@ -661,8 +812,78 @@
       });
     }, { threshold: 0.1 });
 
-    document.querySelectorAll('.fade').forEach(el => {
+    document.querySelectorAll('.fade, .stagger').forEach(el => {
       observer.observe(el);
+    });
+
+    // Subtle elevation on nav after scroll
+    const navEl = document.querySelector('nav');
+    const onScroll = () => {
+      if (!navEl) return;
+      navEl.classList.toggle('scrolled', window.scrollY > 8);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Light parallax on hero copy
+    const parallaxEls = document.querySelectorAll('#hero .hero-h1, #hero .hero-sub');
+    parallaxEls.forEach(el => el.classList.add('parallax-slow'));
+    let ticking = false;
+    const updateParallax = () => {
+      const y = Math.min(window.scrollY, 400);
+      parallaxEls.forEach((el, i) => {
+        el.style.transform = `translateY(${y * (0.06 + i * 0.04)}px)`;
+      });
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    const industrySelect = document.getElementById('industry');
+    const otherField = document.getElementById('industry-other-field');
+    const otherInput = document.getElementById('industry_other');
+    industrySelect.addEventListener('change', () => {
+      const isOther = industrySelect.value === 'other';
+      otherField.hidden = !isOther;
+      otherInput.required = isOther;
+      if (!isOther) otherInput.value = '';
+    });
+
+    // Web3Forms async submission
+    const contactForm = document.getElementById('contact-form');
+    const submitBtn  = document.getElementById('submit-btn');
+    const formStatus = document.getElementById('form-status');
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      formStatus.style.display = 'none';
+      try {
+        const res  = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: new FormData(contactForm)
+        });
+        const data = await res.json();
+        if (data.success) {
+          formStatus.textContent = 'Message sent — we\'ll be in touch.';
+          formStatus.style.color = 'rgba(255,255,255,0.55)';
+          contactForm.reset();
+          otherField.hidden = true;
+        } else {
+          throw new Error(data.message || 'Submission failed');
+        }
+      } catch (err) {
+        formStatus.textContent = 'Something went wrong. Please email hello@labviq.com directly.';
+        formStatus.style.color = 'rgba(255,100,100,0.8)';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send message';
+        formStatus.style.display = 'block';
+      }
     });
   </script>
 
