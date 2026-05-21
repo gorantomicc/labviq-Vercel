@@ -448,6 +448,18 @@
       transition: color 0.2s;
     }
     .footer-email:hover { color: var(--text-secondary); }
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .onstage-badge {
+      height: 56px;
+      width: auto;
+      opacity: 0.85;
+      transition: opacity 0.2s;
+    }
+    .onstage-badge:hover { opacity: 1; }
 
     /* ── Problem ── */
     .problem-panel {
@@ -629,7 +641,12 @@
           </svg>
           <span class="footer-copy">&copy; 2026 Labviq</span>
         </div>
-        <a href="mailto:hello@labviq.com" class="footer-email">hello@labviq.com</a>
+        <div class="footer-right">
+          <a href="https://onstage-shortlist.com/" target="_blank" rel="noopener">
+            <img src="onstage-badge.png" alt="Onstage Top 100" class="onstage-badge">
+          </a>
+          <a href="mailto:hello@labviq.com" class="footer-email">hello@labviq.com</a>
+        </div>
       </div>
     </div>
   </footer>
