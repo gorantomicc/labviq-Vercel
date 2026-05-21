@@ -503,6 +503,13 @@
       font-size: 13px;
       color: var(--text-muted);
     }
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .onstage-badge { height: 48px; width: auto; opacity: 0.85; transition: opacity 0.2s; }
+    .onstage-badge:hover { opacity: 1; }
 
     /* ── Problem ── */
     .problem-points {
@@ -640,8 +647,10 @@
           <h2 class="contact-intro-h2">Get updates as we launch.</h2>
         </div>
         <div class="fade fade-delay-2">
-          <!-- Replace YOUR_FORM_ID with your Formspree form ID — free at formspree.io -->
-          <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="7d3a52ca-f7e3-474d-a13b-144ad9bf1049">
+            <input type="hidden" name="subject" value="New message — Labviq">
+            <input type="hidden" name="redirect" value="false">
             <div class="form-row">
               <div class="field">
                 <label for="name">Name</label>
@@ -672,8 +681,9 @@
               <textarea id="message" name="message" rows="4"></textarea>
             </div>
             <div class="form-submit">
-              <button type="submit" class="btn btn-submit">Send message</button>
+              <button type="submit" class="btn btn-submit" id="submit-btn">Send message</button>
             </div>
+            <p id="form-status" style="margin-top:14px;font-size:13px;display:none;"></p>
           </form>
         </div>
       </div>
@@ -697,6 +707,11 @@
             <rect x="54" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
           </svg>
           <span class="footer-copy">&copy; 2026 Labviq</span>
+        </div>
+        <div class="footer-right">
+          <a href="https://onstage-shortlist.com/" target="_blank" rel="noopener">
+            <img src="onstage-badge.png" class="onstage-badge" alt="Onstage S26 Top 100">
+          </a>
         </div>
       </div>
     </div>
@@ -751,6 +766,39 @@
       otherField.hidden = !isOther;
       otherInput.required = isOther;
       if (!isOther) otherInput.value = '';
+    });
+
+    // Web3Forms async submission
+    const contactForm = document.getElementById('contact-form');
+    const submitBtn  = document.getElementById('submit-btn');
+    const formStatus = document.getElementById('form-status');
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      formStatus.style.display = 'none';
+      try {
+        const res  = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: new FormData(contactForm)
+        });
+        const data = await res.json();
+        if (data.success) {
+          formStatus.textContent = 'Message sent — we\'ll be in touch.';
+          formStatus.style.color = 'rgba(255,255,255,0.55)';
+          contactForm.reset();
+          otherField.hidden = true;
+        } else {
+          throw new Error(data.message || 'Submission failed');
+        }
+      } catch (err) {
+        formStatus.textContent = 'Something went wrong. Please email hello@labviq.com directly.';
+        formStatus.style.color = 'rgba(255,100,100,0.8)';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send message';
+        formStatus.style.display = 'block';
+      }
     });
   </script>
 
