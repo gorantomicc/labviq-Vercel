@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labviq | System of Record for Research Materials</title>
+  <meta name="description" content="AI-native intake and inventory for life science labs. Labviq connects physical materials to their digital records in real time.">
+  <meta property="og:title" content="Labviq, System of Record for Research Materials">
+  <meta property="og:description" content="AI-native intake and inventory for life science labs.">
+  <meta property="og:url" content="https://labviq.com">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NP6J3689J1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NP6J3689J1');
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* ── Surface ── */
+      --bg: #0A0A0A;
+      --surface: #111111;
+      --surface-soft: rgba(255, 255, 255, 0.04);
+
+      /* ── Border ── */
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --border-focus: rgba(255, 255, 255, 0.35);
+
+      /* ── Text ── */
+      --text: #FFFFFF;
+      --text-secondary: rgba(255, 255, 255, 0.55);
+      --text-muted: rgba(255, 255, 255, 0.28);
+
+      /* ── Accent ── */
+      --accent: #8E94A0;
+      --accent-soft: rgba(142, 148, 160, 0.18);
+
+      /* ── Nav overlays (high-opacity panels over hero gradient) ── */
+      --nav-bg: rgba(10, 10, 10, 0.80);
+      --nav-bg-scrolled: rgba(10, 10, 10, 0.72);
+
+      /* ── Typography ── */
+      --font: 'IBM Plex Sans', sans-serif;
+      --tracking-display: -0.025em;
+      --tracking-tight: -0.01em;
+      --tracking-eyebrow: 0.12em;
+
+      /* ── Layout ── */
+      --width-page: 1080px;
+      --width-content: 920px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: var(--width-page);
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    section {
+      padding: 120px 0;
+    }
+
+    /* ── Fade-in ── */
+    .fade {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: opacity, transform;
+    }
+    .fade.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-delay-1 { transition-delay: 0.08s; }
+    .fade-delay-2 { transition-delay: 0.16s; }
+    .fade-delay-3 { transition-delay: 0.24s; }
+    .fade-delay-4 { transition-delay: 0.32s; }
+
+    /* Staggered children (impact rows) */
+    .stagger > * {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .stagger.visible > * { opacity: 1; transform: translateY(0); }
+    .stagger.visible > *:nth-child(1) { transition-delay: 0.05s; }
+    .stagger.visible > *:nth-child(2) { transition-delay: 0.18s; }
+    .stagger.visible > *:nth-child(3) { transition-delay: 0.31s; }
+    .stagger.visible > *:nth-child(4) { transition-delay: 0.44s; }
+
+    /* Hero parallax-ish drift */
+    .parallax-slow { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
+
+    /* Brand mark gentle float */
+    @keyframes solution-float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+    .solution-mark.visible { animation: solution-float 6s ease-in-out infinite; }
+
+    /* Sticky nav gains a subtle elevation once user scrolls */
+    nav.scrolled {
+      background: var(--nav-bg-scrolled);
+      backdrop-filter: saturate(140%) blur(10px);
+      -webkit-backdrop-filter: saturate(140%) blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav { transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade, .stagger > *, .parallax-slow { transition: none !important; transform: none !important; }
+      .fade { opacity: 1; }
+      .stagger > * { opacity: 1; }
+      .solution-mark.visible { animation: none; }
+      nav { transition: none; }
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: var(--nav-bg);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .nav-link {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-link:hover { opacity: 0.75; }
+
+    /* ── Eyebrow label (shared: section labels, card num, etc.) ── */
+    .label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    /* ── Hero ── */
+    #hero {
+      padding: 160px 0 140px;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: "";
+      position: absolute;
+      inset: -10% -10% auto -10%;
+      height: 90%;
+      background:
+        radial-gradient(60% 70% at 25% 25%, rgba(142,148,160,0.10), transparent 70%),
+        radial-gradient(50% 60% at 80% 0%, rgba(142,148,160,0.06), transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    #hero > .container { position: relative; z-index: 1; }
+    #hero .label {
+      margin-bottom: 32px;
+    }
+    .hero-h1 {
+      font-size: clamp(2.75rem, 5.5vw, 4.5rem);
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: var(--tracking-display);
+      max-width: var(--width-content);
+      margin-bottom: 56px;
+      text-wrap: balance;
+    }
+    @media (max-width: 600px) {
+      .hero-h1 {
+        font-size: clamp(1.75rem, 8vw, 2.75rem);
+        line-height: 1.15;
+        margin-bottom: 40px;
+      }
+    }
+    .hero-sub {
+      font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+      font-weight: 500;
+      color: var(--text);
+      max-width: var(--width-content);
+      line-height: 1.4;
+      margin-bottom: 48px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #0A0A0A;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+      box-shadow: 0 0 0 0 var(--accent-soft);
+    }
+    .btn:hover { background: #A1A6B0; transform: translateY(-1px); box-shadow: 0 8px 24px -8px var(--accent-soft); }
+    .btn:active { transform: translateY(0); }
+
+    /* ── Section headings ── */
+    .section-h2 {
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: var(--tracking-display);
+      line-height: 1.15;
+      max-width: var(--width-content);
+      margin-bottom: 56px;
+    }
+    .solution-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      max-width: var(--width-content);
+    }
+    .solution-row .section-h2 {
+      margin-bottom: 0;
+      max-width: none;
+      flex: 1 1 auto;
+    }
+    .solution-mark {
+      flex-shrink: 0;
+    }
+    @media (max-width: 768px) {
+      .solution-row { flex-direction: column; align-items: flex-start; gap: 32px; }
+      .solution-mark { width: 160px; height: 160px; }
+    }
+
+    /* ── Card (unified card/pillar pattern) ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .cards { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--border-strong); }
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: var(--tracking-tight);
+      margin-bottom: 12px;
+    }
+    .card-body {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+    /* Optional eyebrow number inside a card — uses .label */
+    .card .label {
+      margin-bottom: 20px;
+    }
+
+    /* ── Impact strip ── */
+    .impact-strip {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--surface);
+      max-width: var(--width-content);
+    }
+    .impact-item {
+      display: grid;
+      grid-template-columns: minmax(240px, 320px) 1fr;
+      align-items: baseline;
+      gap: 56px;
+      padding: 48px 56px;
+    }
+    .impact-item:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+    @media (max-width: 768px) {
+      .impact-item {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 32px 28px;
+      }
+    }
+    .impact-label {
+      font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+      font-weight: 700;
+      letter-spacing: var(--tracking-eyebrow);
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .impact-desc {
+      font-size: clamp(1.125rem, 2vw, 1.375rem);
+      color: var(--text);
+      line-height: 1.45;
+      font-weight: 400;
+    }
+
+    /* ── Lifecycle bar ── */
+    .lifecycle {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    @media (max-width: 600px) {
+      .lifecycle { flex-direction: column; }
+      .lifecycle-arrow { display: none; }
+      .lifecycle-stage { border-right: none !important; border-bottom: 1px solid var(--border); width: 100%; }
+    }
+    .lifecycle-stage {
+      flex: 1;
+      padding: 20px 24px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .lifecycle-stage:last-child { border-right: none; }
+    .lifecycle-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .lifecycle-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    /* ── Why now section ── */
+    #why-now .body-text {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: var(--width-content);
+      margin-bottom: 48px;
+    }
+    .closing-line {
+      margin-top: 48px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      border-left: 2px solid var(--border-strong);
+      padding-left: 20px;
+      max-width: var(--width-content);
+    }
+    .closing-line span {
+      color: var(--text);
+    }
+
+    /* ── Contact section ── */
+    #contact {
+      border-top: 1px solid var(--border);
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 56px;
+      align-items: start;
+      max-width: var(--width-content);
+    }
+    @media (max-width: 768px) {
+      .contact-grid { gap: 40px; }
+    }
+    .contact-intro-h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 600;
+      letter-spacing: var(--tracking-display);
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 520px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field[hidden] { display: none; }
+    label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    input, select, textarea {
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.55)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+    select option {
+      background: #1a1a1a;
+      color: var(--text);
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--border-focus);
+    }
+    input::placeholder, textarea::placeholder {
+      color: var(--text-muted);
+    }
+    textarea { resize: vertical; min-height: 110px; }
+
+    .form-submit {
+      padding-top: 4px;
+    }
+    .btn-submit {
+      width: 100%;
+      justify-content: center;
+      padding: 14px 24px;
+      font-size: 14px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .footer-copy {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .onstage-badge { height: 48px; width: auto; opacity: 0.85; transition: opacity 0.2s; }
+    .onstage-badge:hover { opacity: 1; }
+
+    /* ── Problem ── */
+    .problem-points {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+      max-width: var(--width-content);
+    }
+    .problem-point {
+      font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+      letter-spacing: var(--tracking-tight);
+    }
+
+    /* ── Divider ── */
+    .section-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border) 30%, var(--border) 70%, transparent);
+      max-width: var(--width-page);
+      margin: 0 auto;
+    }
+
+    /* Subtle alternating section tones */
+    #impact, #contact {
+      background: linear-gradient(to bottom, rgba(255,255,255,0.012), rgba(255,255,255,0));
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ── -->
+  <nav>
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#" class="nav-logo" aria-label="Labviq">
+          <svg width="140" height="40" viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Ghost squares -->
+            <rect x="10" y="10" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="10" y="32" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="10" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="32" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="54" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <!-- Solid squares -->
+            <rect x="32" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <rect x="54" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <rect x="32" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <rect x="54" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <!-- Wordmark -->
+            <text x="96" y="52" font-family="IBM Plex Sans, sans-serif" font-size="36" font-weight="600" letter-spacing="-1.08" fill="#FFFFFF">Labviq</text>
+          </svg>
+        </a>
+        <a href="#contact" class="nav-link">Stay in the loop</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="hero">
+    <div class="container">
+      <h1 class="hero-h1 fade">System of record for research materials in life science labs</h1>
+      <a href="#contact" class="btn fade fade-delay-2">Stay in the loop &rarr;</a>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ── Problem ── -->
+  <section id="problem">
+    <div class="container">
+      <h2 class="section-h2 fade">Materials move through the lab, but their records do not.</h2>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ── Impact ── -->
+  <section id="impact">
+    <div class="container">
+      <h2 class="section-h2 fade">The impact.</h2>
+      <div class="impact-strip stagger">
+        <div class="impact-item">
+          <div class="impact-label">Compliance</div>
+          <p class="impact-desc">Failed audits. Delayed milestones.</p>
+        </div>
+        <div class="impact-item">
+          <div class="impact-label">Reproducibility</div>
+          <p class="impact-desc">Lost work. Unrepeatable results.</p>
+        </div>
+        <div class="impact-item">
+          <div class="impact-label">Cost</div>
+          <p class="impact-desc">Duplicate buys. Expired stock.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ── Solution ── -->
+  <section id="solution">
+    <div class="container">
+      <div class="solution-row">
+        <h2 class="section-h2 fade">Labviq is the solution that we are building.</h2>
+        <svg class="solution-mark fade fade-delay-1" width="200" height="200" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- Ghost squares -->
+          <rect x="10" y="10" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+          <rect x="10" y="32" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+          <rect x="10" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+          <rect x="32" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+          <rect x="54" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+          <!-- Solid squares -->
+          <rect x="32" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
+          <rect x="54" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
+          <rect x="32" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
+          <rect x="54" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Contact ── -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="fade fade-delay-1">
+          <h2 class="contact-intro-h2">Get updates as we launch.</h2>
+        </div>
+        <div class="fade fade-delay-2">
+          <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="7d3a52ca-f7e3-474d-a13b-144ad9bf1049">
+            <input type="hidden" name="subject" value="New message — Labviq">
+            <input type="hidden" name="redirect" value="false">
+            <div class="form-row">
+              <div class="field">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+              </div>
+              <div class="field">
+                <label for="email">Work email</label>
+                <input type="email" id="email" name="email" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="industry">Industry</label>
+              <select id="industry" name="industry" required>
+                <option value="" disabled selected></option>
+                <option value="academia">Academia</option>
+                <option value="biotech">Biotech</option>
+                <option value="pharmaceuticals">Pharmaceuticals</option>
+                <option value="venture-capital">Venture capital</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="field" id="industry-other-field" hidden>
+              <label for="industry_other">Please specify</label>
+              <input type="text" id="industry_other" name="industry_other">
+            </div>
+            <div class="field">
+              <label for="message">Message (optional)</label>
+              <textarea id="message" name="message" rows="4"></textarea>
+            </div>
+            <div class="form-submit">
+              <button type="submit" class="btn btn-submit" id="submit-btn">Send message</button>
+            </div>
+            <p id="form-status" style="margin-top:14px;font-size:13px;display:none;"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <svg width="28" height="28" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="10" y="10" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="10" y="32" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="10" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="32" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="54" y="54" width="16" height="16" rx="3" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+            <rect x="32" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <rect x="54" y="10" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <rect x="32" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
+            <rect x="54" y="32" width="16" height="16" rx="3" fill="#FFFFFF"/>
+          </svg>
+          <span class="footer-copy">&copy; 2026 Labviq</span>
+        </div>
+        <div class="footer-right">
+          <a href="https://onstage-shortlist.com/" target="_blank" rel="noopener">
+            <img src="onstage-badge.png" class="onstage-badge" alt="Onstage S26 Top 100">
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade, .stagger').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Subtle elevation on nav after scroll
+    const navEl = document.querySelector('nav');
+    const onScroll = () => {
+      if (!navEl) return;
+      navEl.classList.toggle('scrolled', window.scrollY > 8);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Light parallax on hero copy
+    const parallaxEls = document.querySelectorAll('#hero .hero-h1, #hero .hero-sub');
+    parallaxEls.forEach(el => el.classList.add('parallax-slow'));
+    let ticking = false;
+    const updateParallax = () => {
+      const y = Math.min(window.scrollY, 400);
+      parallaxEls.forEach((el, i) => {
+        el.style.transform = `translateY(${y * (0.06 + i * 0.04)}px)`;
+      });
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    const industrySelect = document.getElementById('industry');
+    const otherField = document.getElementById('industry-other-field');
+    const otherInput = document.getElementById('industry_other');
+    industrySelect.addEventListener('change', () => {
+      const isOther = industrySelect.value === 'other';
+      otherField.hidden = !isOther;
+      otherInput.required = isOther;
+      if (!isOther) otherInput.value = '';
+    });
+
+    // Web3Forms async submission
+    const contactForm = document.getElementById('contact-form');
+    const submitBtn  = document.getElementById('submit-btn');
+    const formStatus = document.getElementById('form-status');
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      formStatus.style.display = 'none';
+      try {
+        const res  = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: new FormData(contactForm)
+        });
+        const data = await res.json();
+        if (data.success) {
+          formStatus.textContent = 'Message sent — we\'ll be in touch.';
+          formStatus.style.color = 'rgba(255,255,255,0.55)';
+          contactForm.reset();
+          otherField.hidden = true;
+        } else {
+          throw new Error(data.message || 'Submission failed');
+        }
+      } catch (err) {
+        formStatus.textContent = 'Something went wrong. Please email hello@labviq.com directly.';
+        formStatus.style.color = 'rgba(255,100,100,0.8)';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send message';
+        formStatus.style.display = 'block';
+      }
+    });
+  </script>
+
+</body>
+</html>
