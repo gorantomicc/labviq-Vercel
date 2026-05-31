@@ -142,13 +142,6 @@
     width: 7px; height: 7px;
     border-radius: 50%;
     background: var(--teal);
-    box-shadow: 0 0 0 0 rgba(14,165,233,0.6);
-    animation: pulse 2.4s infinite;
-  }
-  @keyframes pulse {
-    0%   { box-shadow: 0 0 0 0 rgba(14,165,233,0.5); }
-    70%  { box-shadow: 0 0 0 7px rgba(14,165,233,0); }
-    100% { box-shadow: 0 0 0 0 rgba(14,165,233,0); }
   }
 
   /* hero */
@@ -166,27 +159,12 @@
     line-height: 1.0;
     margin-bottom: 18px;
     padding-bottom: 0.08em;
-    background: linear-gradient(105deg,
-      var(--ink) 0%, var(--ink) 43%,
-      #ffffff 50%,
-      var(--ink) 57%, var(--ink) 100%);
-    background-size: 240% 100%;
-    background-position: 130% 0;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--ink);
     opacity: 0;
     transform: translateY(16px);
-    animation:
-      brand-in .8s cubic-bezier(.22,.61,.36,1) .15s forwards,
-      brand-sheen 8s ease-in-out 1.6s infinite;
+    animation: brand-in .8s cubic-bezier(.22,.61,.36,1) .15s forwards;
   }
   @keyframes brand-in { to { opacity: 1; transform: none; } }
-  @keyframes brand-sheen {
-    0%   { background-position: 130% 0; }
-    50%  { background-position: -45% 0; }
-    100% { background-position: -45% 0; }
-  }
   h1 {
     font-size: clamp(38px, 6.5vw, 62px);
     line-height: 1.04;
@@ -196,11 +174,6 @@
   }
   h1 .accent {
     color: var(--teal);
-    animation: text-glow 1.8s ease-in-out infinite;
-  }
-  @keyframes text-glow {
-    0%, 100% { text-shadow: 0 0 7px color-mix(in srgb, currentColor 22%, transparent); }
-    50%      { text-shadow: 0 0 18px color-mix(in srgb, currentColor 62%, transparent); }
   }
   .lede {
     font-size: clamp(20px, 3vw, 27px);
@@ -219,7 +192,6 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    position: relative;
     background: var(--teal);
     color: var(--navy-deep);
     font-family: var(--sans);
@@ -228,31 +200,11 @@
     padding: 14px 26px;
     border-radius: 8px;
     text-decoration: none;
-    transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
-  }
-  .btn::before {
-    content: "";
-    position: absolute;
-    inset: -3px;
-    border-radius: inherit;
-    background: var(--teal);
-    filter: blur(16px);
-    opacity: 0;
-    z-index: -1;
-    pointer-events: none;
-    animation: btn-breathe 1.8s ease-in-out infinite;
-  }
-  @keyframes btn-breathe {
-    0%, 100% { opacity: 0.28; transform: scale(0.95); }
-    50%      { opacity: 0.72; transform: scale(1.09); }
+    transition: background .18s ease;
   }
   .btn:hover {
-    transform: translateY(-2px);
     background: #38bdf8;
-    box-shadow: 0 12px 30px rgba(14,165,233,0.22);
   }
-  .btn svg { transition: transform .18s ease; }
-  .btn:hover svg { transform: translateX(3px); }
   .note {
     font-family: var(--mono);
     font-size: 12.5px;
@@ -313,7 +265,6 @@
     align-self: flex-start;
     margin-top: 4px;
   }
-  .btn-submit::before { animation-delay: 0.9s; }
   #form-status {
     font-family: var(--mono);
     font-size: 13px;
@@ -398,16 +349,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .reveal, .logomark rect, .scroll-reveal { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
-    .btn::before { animation: none !important; opacity: 0 !important; }
-    h1 .accent { animation: none !important; text-shadow: none !important; }
-    .brand {
-      animation: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-      background: none;
-      -webkit-text-fill-color: var(--ink);
-      color: var(--ink);
-    }
+    .brand { animation: none !important; opacity: 1 !important; transform: none !important; }
   }
 
   @media (max-width: 560px) {
