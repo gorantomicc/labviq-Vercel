@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Labviq | System of record for research materials</title>
+<meta name="description" content="Labviq is a system of record for research materials in life-science labs — agentic integration of the physical and digital world.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --navy:#0a1726; --navy-deep:#06101b; --ink:#e8edf2; --ink-soft:#9aa9b8;
+  --ink-faint:#5d6f80; --teal:#0EA5E9; --teal-dim:#0284c7;
+  --line:rgba(255,255,255,0.08); --card:rgba(255,255,255,0.025);
+  --sans:'IBM Plex Sans',sans-serif; --mono:'IBM Plex Mono',monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:var(--sans); background:var(--navy); color:var(--ink);
+  -webkit-font-smoothing:antialiased; min-height:100vh; position:relative; overflow-x:hidden;
+}
+body::before {
+  content:""; position:fixed; inset:0;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 0%,transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 0%,transparent 75%);
+  pointer-events:none; z-index:0;
+}
+.aurora {
+  position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0;
+  mask-image:radial-gradient(ellipse 90% 80% at 50% 35%,#000 0%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 80% at 50% 35%,#000 0%,transparent 80%);
+}
+.blob { position:absolute; border-radius:50%; filter:blur(70px); opacity:0.6; will-change:transform; }
+.blob-1 { width:620px; height:620px; top:-180px; left:50%; background:radial-gradient(circle,rgba(14,165,233,0.32) 0%,transparent 70%); animation:drift1 22s ease-in-out infinite; }
+.blob-2 { width:520px; height:520px; top:-60px; left:18%; background:radial-gradient(circle,rgba(2,132,199,0.30) 0%,transparent 70%); animation:drift2 28s ease-in-out infinite; }
+.blob-3 { width:460px; height:460px; top:40px; right:12%; background:radial-gradient(circle,rgba(70,130,220,0.22) 0%,transparent 70%); animation:drift3 26s ease-in-out infinite; }
+@keyframes drift1 { 0%,100%{transform:translate(-50%,0) scale(1);} 50%{transform:translate(-46%,50px) scale(1.12);} }
+@keyframes drift2 { 0%,100%{transform:translate(0,0) scale(1);opacity:.55;} 50%{transform:translate(70px,70px) scale(1.08);opacity:.75;} }
+@keyframes drift3 { 0%,100%{transform:translate(0,0) scale(1.05);opacity:.5;} 50%{transform:translate(-60px,40px) scale(.92);opacity:.7;} }
+@media (prefers-reduced-motion:reduce){ .blob{animation:none!important;} }
+.wrap { position:relative; z-index:1; max-width:760px; margin:0 auto; padding:0 32px; }
+header { padding:32px 0; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:rgba(10,23,38,0.78); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:5; margin:0 -32px; padding-left:32px; padding-right:32px; }
+.wordmark { display:inline-flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink); }
+.wordmark .name { font-weight:700; font-size:19px; letter-spacing:0.04em; }
+nav.site-nav { display:flex; align-items:center; gap:28px; }
+nav.site-nav a { font-size:14px; font-weight:500; letter-spacing:0.02em; color:var(--ink-soft); text-decoration:none; transition:color .15s ease; }
+nav.site-nav a:hover { color:var(--ink); }
+.section { padding:80px 0; border-top:1px solid var(--line); }
+.eyebrow { font-family:var(--mono); font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--teal); margin-bottom:20px; display:flex; align-items:center; gap:9px; }
+.eyebrow::before { content:""; width:22px; height:1px; background:var(--teal-dim); }
+h1 { font-size:clamp(38px,6.5vw,60px); line-height:1.05; font-weight:700; letter-spacing:-0.025em; margin-bottom:26px; }
+h1 .accent { color:var(--teal); }
+h2 { font-size:clamp(26px,4vw,36px); font-weight:700; letter-spacing:-0.02em; line-height:1.12; margin-bottom:24px; }
+h3 { font-size:19px; font-weight:600; letter-spacing:-0.01em; margin-bottom:10px; }
+.lede { font-size:clamp(19px,3vw,25px); line-height:1.5; color:var(--ink-soft); max-width:600px; }
+.prose p { font-size:17px; line-height:1.7; color:var(--ink-soft); max-width:620px; margin-bottom:20px; }
+.prose p:last-child { margin-bottom:0; }
+.prose strong { color:var(--ink); font-weight:600; }
+.prose a { color:var(--teal); text-decoration:none; }
+.prose a:hover { text-decoration:underline; }
+.hero { padding:80px 0 48px; display:flex; flex-direction:column; justify-content:center; }
+.brand { font-size:clamp(64px,13vw,132px); font-weight:700; letter-spacing:-0.04em; line-height:1.0; margin-bottom:18px; padding-bottom:0.08em; color:var(--ink); }
+.cta-row { display:flex; align-items:center; gap:22px; flex-wrap:wrap; margin-top:40px; }
+.btn { display:inline-flex; align-items:center; gap:10px; background:var(--teal); color:var(--navy-deep); font-family:var(--sans); font-weight:600; font-size:15px; padding:14px 26px; border-radius:8px; text-decoration:none; transition:background .18s ease; }
+.btn:hover { background:#38bdf8; }
+.link-arrow { display:inline-flex; align-items:center; gap:8px; color:var(--ink-soft); font-weight:500; font-size:15px; text-decoration:none; transition:color .15s ease,gap .15s ease; }
+.link-arrow:hover { color:var(--teal); gap:12px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:38px; }
+.grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:38px; }
+.tile { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:26px 22px; }
+.tile .num { font-family:var(--mono); font-size:13px; color:var(--teal); letter-spacing:0.08em; margin-bottom:16px; }
+.tile p { font-size:14.5px; line-height:1.6; color:var(--ink-soft); }
+.founder { display:flex; gap:20px; padding:26px 0; border-top:1px solid var(--line); }
+.founder:first-of-type { border-top:none; }
+.founder .avatar { flex:0 0 56px; width:56px; height:56px; border-radius:50%; background:linear-gradient(140deg,var(--teal-dim),#1e3a5f); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; color:var(--navy-deep); letter-spacing:0.02em; }
+.founder .role { font-family:var(--mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-faint); margin:2px 0 10px; }
+.founder a.profile { font-size:13px; color:var(--teal); text-decoration:none; }
+.founder a.profile:hover { text-decoration:underline; }
+form { display:flex; flex-direction:column; gap:22px; margin-top:38px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+.field { display:flex; flex-direction:column; gap:8px; }
+.field label { font-family:var(--mono); font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-faint); }
+.field input,.field select,.field textarea { background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:8px; padding:12px 14px; color:var(--ink); font-family:var(--sans); font-size:15px; transition:border-color .15s ease,background .15s ease; }
+.field textarea { resize:vertical; min-height:96px; }
+.field input:focus,.field select:focus,.field textarea:focus { outline:none; border-color:var(--teal-dim); background:rgba(14,165,233,0.05); }
+.field select { appearance:none; cursor:pointer; }
+.field select option { background:var(--navy); color:var(--ink); }
+.btn-submit { border:none; cursor:pointer; align-self:flex-start; margin-top:4px; }
+#form-status { font-family:var(--mono); font-size:13px; display:none; }
+footer { border-top:1px solid var(--line); padding:40px 0 56px; }
+.footer-top { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:28px; }
+.footer-links { display:flex; gap:24px; flex-wrap:wrap; }
+.footer-links a { font-size:14px; color:var(--ink-soft); text-decoration:none; transition:color .15s ease; }
+.footer-links a:hover { color:var(--teal); }
+.footer-legal { font-family:var(--mono); font-size:12px; line-height:1.7; letter-spacing:0.02em; color:var(--ink-faint); max-width:560px; }
+.footer-legal a { color:var(--ink-soft); text-decoration:none; }
+.footer-legal a:hover { color:var(--teal); }
+.social { display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border:1px solid var(--line); border-radius:8px; color:var(--ink-soft); transition:color .15s ease,border-color .15s ease,transform .15s ease; }
+.social:hover { color:var(--teal); border-color:var(--teal-dim); transform:translateY(-2px); }
+.scroll-reveal { opacity:0; transform:translateY(22px); transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1); will-change:opacity,transform; }
+.scroll-reveal.in-view { opacity:1; transform:none; }
+.scroll-reveal.delay-1 { transition-delay:.10s; }
+@media (prefers-reduced-motion:reduce){ .scroll-reveal{transition:none!important;opacity:1!important;transform:none!important;} }
+@media (max-width:620px){ .grid-3,.grid-2,.form-row{grid-template-columns:1fr;} .hero{padding:64px 0;} }
+@media (max-width:560px){ header{padding:24px 0;} nav.site-nav{gap:18px;} .wrap{padding:0 24px;} .section{padding:60px 0;} }
+</style>
+</head>
+<body>
+  <div class="aurora">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="wrap">
+
+    <header>
+      <a class="wordmark" href="#top" aria-label="Labviq home">
+        <svg width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Labviq">
+          <rect x="10" y="10" width="16" height="16" rx="3" fill="#0EA5E9"/>
+          <rect x="10" y="32" width="16" height="16" rx="3" fill="#0EA5E9"/>
+          <rect x="10" y="54" width="16" height="16" rx="3" fill="#0EA5E9"/>
+          <rect x="32" y="54" width="16" height="16" rx="3" fill="#0EA5E9"/>
+          <rect x="54" y="54" width="16" height="16" rx="3" fill="#0EA5E9"/>
+          <rect x="32" y="10" width="16" height="16" rx="3" fill="none" stroke="#0EA5E9" stroke-width="1.5"/>
+          <rect x="32" y="32" width="16" height="16" rx="3" fill="none" stroke="#0EA5E9" stroke-width="1.5"/>
+          <rect x="54" y="32" width="16" height="16" rx="3" fill="none" stroke="#0EA5E9" stroke-width="1.5"/>
+        </svg>
+        <span class="name">Labviq</span>
+      </a>
+      <nav class="site-nav">
+        <a href="#top">Home</a>
+        <a href="#product">Product</a>
+        <a href="#company">Company</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero" id="top">
+      <div class="brand">Labviq</div>
+      <h1>A <span class="accent">system of record</span> for research materials</h1>
+      <p class="lede">
+        Labviq captures lab materials at the point of intake — agentic
+        integration of the physical and digital world.
+      </p>
+      <div class="cta-row">
+        <a class="btn" href="#contact">
+          Get in touch
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a class="link-arrow" href="#product">
+          See how it works
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="scroll-reveal">
+        <div class="eyebrow">What we do</div>
+        <h2>The lab works. The record keeps up.</h2>
+      </div>
+      <div class="prose scroll-reveal delay-1">
+        <p>
+          Every lab has the same gap. Materials arrive as physical objects, but their
+          digital records depend on someone stopping to log them by hand. More often
+          than not, that doesn't happen — and the record drifts out of step with what's
+          actually on the shelf.
+        </p>
+        <p>
+          <strong>Labviq closes that gap.</strong> It captures materials at the point of
+          intake and turns each one into a complete, verified record — automatically, as
+          part of the normal workflow rather than a separate task.
+        </p>
+        <p>
+          The result is a living record of everything in the lab — searchable, connected to
+          the work it supports, and kept current as materials are used and replaced.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="scroll-reveal">
+        <div class="eyebrow">How it works</div>
+        <h2>Three steps. No data entry.</h2>
+      </div>
+      <div class="grid-3 scroll-reveal delay-1">
+        <div class="tile">
+          <div class="num">STEP 01</div>
+          <h3>Capture</h3>
+          <p>Capture a material as it comes into the lab — in the flow of normal work.</p>
+        </div>
+        <div class="tile">
+          <div class="num">STEP 02</div>
+          <h3>Confirm</h3>
+          <p>Confirm what's in front of you and carry on. The rest happens in the background.</p>
+        </div>
+        <div class="tile">
+          <div class="num">STEP 03</div>
+          <h3>Done</h3>
+          <p>A complete, verified record is created and filed for you — ready when you need it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="product">
+      <div class="scroll-reveal">
+        <div class="eyebrow">Product</div>
+        <h2>From physical to digital, automatically.</h2>
+      </div>
+      <div class="grid-2 scroll-reveal delay-1">
+        <div class="tile">
+          <h3>Capture</h3>
+          <p>Materials are captured as they enter the lab, in the flow of normal work.</p>
+        </div>
+        <div class="tile">
+          <h3>Structure</h3>
+          <p>Each one becomes a clean, structured record — with no manual typing.</p>
+        </div>
+        <div class="tile">
+          <h3>Verify</h3>
+          <p>Records are completed and cross-checked against trusted reference sources.</p>
+        </div>
+        <div class="tile">
+          <h3>Connect</h3>
+          <p>Every record stays connected to the work and the inventory it belongs to.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="scroll-reveal">
+        <div class="eyebrow">Why it matters</div>
+        <h2>Complete records, by design.</h2>
+      </div>
+      <div class="grid-3 scroll-reveal delay-1">
+        <div class="tile">
+          <h3>Compliance</h3>
+          <p>Traceable, audit-ready records captured automatically rather than reconstructed from memory.</p>
+        </div>
+        <div class="tile">
+          <h3>Reproducibility</h3>
+          <p>Work stays connected to the materials behind it, so results can be defended and repeated.</p>
+        </div>
+        <div class="tile">
+          <h3>Cost</h3>
+          <p>Clear visibility of what's in the lab reduces duplicate orders and wasted spend.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="company">
+      <div class="scroll-reveal">
+        <div class="eyebrow">Company</div>
+      </div>
+      <div class="prose scroll-reveal delay-1">
+        <p>
+          Labviq is a system of record for research materials in life-science labs. We sit
+          at the seam between the physical and digital lab — the moment a material arrives,
+          is stored, used or moved — and make that moment automatic.
+        </p>
+        <p>
+          Based in London and founded in 2026, Labviq builds granular, verified records of
+          every reagent and sample a lab handles, captured at the point of intake and kept
+          current across the material's lifecycle. The aim is end-to-end traceability — from
+          supplier to result — that makes reproducible, auditable science the default rather
+          than an administrative burden.
+        </p>
+      </div>
+
+      <div style="margin-top:48px">
+        <div class="eyebrow scroll-reveal">Team</div>
+        <div class="scroll-reveal delay-1">
+          <div class="founder">
+            <div class="avatar">FA</div>
+            <div>
+              <h3>Faizan Ahmad</h3>
+              <div class="role">Co-founder &amp; CEO</div>
+              <a class="profile" href="https://www.linkedin.com/in/faizan-ahmad-phd/" target="_blank" rel="noopener">linkedin.com/in/faizan-ahmad-phd ↗</a>
+            </div>
+          </div>
+          <div class="founder">
+            <div class="avatar">GT</div>
+            <div>
+              <h3>Goran Tomic</h3>
+              <div class="role">Co-founder &amp; CSO</div>
+              <a class="profile" href="https://www.linkedin.com/in/tomicgoran/" target="_blank" rel="noopener">linkedin.com/in/tomicgoran ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:48px">
+        <div class="eyebrow scroll-reveal">Company details</div>
+        <div class="prose scroll-reveal delay-1">
+          <p>
+            Labviq Limited is registered in England and Wales, company number 17172067,
+            incorporated on 21 April 2026. Its registered office is at 9 Wells Apartments,
+            79 Sutherland Road, London, England, E17 6BH, and we can be reached at
+            <a href="mailto:hello@labviq.com">hello@labviq.com</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="scroll-reveal">
+        <div class="eyebrow">Contact</div>
+        <h2>Get in touch.</h2>
+      </div>
+      <form id="contact-form" class="scroll-reveal delay-1" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="7d3a52ca-f7e3-474d-a13b-144ad9bf1049">
+        <input type="hidden" name="subject" value="New message — Labviq">
+        <input type="hidden" name="redirect" value="false">
+        <div class="form-row">
+          <div class="field">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Work email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="industry">Industry</label>
+          <select id="industry" name="industry" required>
+            <option value="" disabled selected></option>
+            <option value="academia">Academia</option>
+            <option value="biotech">Biotech</option>
+            <option value="pharmaceuticals">Pharmaceuticals</option>
+            <option value="venture-capital">Venture capital</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="field" id="industry-other-field" hidden>
+          <label for="industry_other">Please specify</label>
+          <input type="text" id="industry_other" name="industry_other">
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="4"></textarea>
+        </div>
+        <button type="submit" class="btn btn-submit" id="submit-btn">Send message</button>
+        <p id="form-status"></p>
+      </form>
+    </section>
+
+    <footer>
+      <div class="footer-top">
+        <div class="footer-links">
+          <a href="#top">Home</a>
+          <a href="#product">Product</a>
+          <a href="#company">Company</a>
+          <a href="#contact">Contact</a>
+          <a href="mailto:hello@labviq.com">hello@labviq.com</a>
+        </div>
+        <a class="social" href="https://www.linkedin.com/company/labviq" target="_blank" rel="noopener" aria-label="Labviq on LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>
+          </svg>
+        </a>
+      </div>
+      <p class="footer-legal">
+        &copy; 2026 Labviq Limited. Registered in England &amp; Wales, company no. 17172067.<br>
+        Registered office: 9 Wells Apartments, 79 Sutherland Road, London, England, E17 6BH &middot; <a href="mailto:hello@labviq.com">hello@labviq.com</a>
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); } });
+      }, { threshold: 0.18 });
+      document.querySelectorAll('.scroll-reveal').forEach(el => io.observe(el));
+    } else {
+      document.querySelectorAll('.scroll-reveal').forEach(el => el.classList.add('in-view'));
+    }
+
+    const industrySelect = document.getElementById('industry');
+    const otherField = document.getElementById('industry-other-field');
+    const otherInput = document.getElementById('industry_other');
+    industrySelect.addEventListener('change', () => {
+      const isOther = industrySelect.value === 'other';
+      otherField.hidden = !isOther;
+      otherInput.required = isOther;
+      if (!isOther) otherInput.value = '';
+    });
+
+    const contactForm = document.getElementById('contact-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const formStatus = document.getElementById('form-status');
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true; submitBtn.textContent = 'Sending…';
+      formStatus.style.display = 'none';
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', { method:'POST', body:new FormData(contactForm) });
+        const data = await res.json();
+        if (data.success) {
+          formStatus.textContent = 'Message sent — we\'ll be in touch.';
+          formStatus.style.color = 'var(--ink-soft)';
+          contactForm.reset(); otherField.hidden = true;
+        } else { throw new Error(data.message || 'Submission failed'); }
+      } catch (err) {
+        formStatus.textContent = 'Something went wrong. Please email hello@labviq.com directly.';
+        formStatus.style.color = 'rgba(255,120,120,0.85)';
+      } finally {
+        submitBtn.disabled = false; submitBtn.textContent = 'Send message';
+        formStatus.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

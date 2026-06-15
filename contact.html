@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact | Labviq</title>
+<meta name="description" content="Get in touch with Labviq. Email hello@labviq.com or use the contact form. Labviq Limited is based in London, England.">
+<link rel="canonical" href="https://labviq.com/contact">
+<meta property="og:title" content="Contact | Labviq">
+<meta property="og:description" content="Get in touch with Labviq — email hello@labviq.com. Based in London, England.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://labviq.com/contact">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="aurora">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="wrap">
+
+    <header>
+      <a class="wordmark" href="/" aria-label="Labviq home">
+        <svg width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Labviq">
+          <rect x="10" y="10" width="16" height="16" rx="3" fill="#0EA5E9"/>
+          <rect x="10" y="32" width="16" height="16" rx="3" fill="#0EA5E9"/>
+          <rect x="10" y="54" width="16" height="16" rx="3" fill="#0EA5E9"/>
+          <rect x="32" y="54" width="16" height="16" rx="3" fill="#0EA5E9"/>
+          <rect x="54" y="54" width="16" height="16" rx="3" fill="#0EA5E9"/>
+          <rect x="32" y="10" width="16" height="16" rx="3" fill="none" stroke="#0EA5E9" stroke-width="1.5"/>
+          <rect x="32" y="32" width="16" height="16" rx="3" fill="none" stroke="#0EA5E9" stroke-width="1.5"/>
+          <rect x="54" y="32" width="16" height="16" rx="3" fill="none" stroke="#0EA5E9" stroke-width="1.5"/>
+        </svg>
+        <span class="name">Labviq</span>
+      </a>
+      <nav class="site-nav">
+        <a href="/">Home</a>
+        <a href="/product">Product</a>
+        <a href="/company">Company</a>
+        <a href="/contact" aria-current="page">Contact</a>
+      </nav>
+    </header>
+
+    <section class="section">
+      <div class="scroll-reveal">
+        <div class="eyebrow">Contact</div>
+        <h1>Get in touch.</h1>
+      </div>
+      <form id="contact-form" class="scroll-reveal delay-1" action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="7d3a52ca-f7e3-474d-a13b-144ad9bf1049">
+        <input type="hidden" name="subject" value="New message — Labviq">
+        <input type="hidden" name="redirect" value="false">
+        <div class="form-row">
+          <div class="field">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Work email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="industry">Industry</label>
+          <select id="industry" name="industry" required>
+            <option value="" disabled selected></option>
+            <option value="academia">Academia</option>
+            <option value="biotech">Biotech</option>
+            <option value="pharmaceuticals">Pharmaceuticals</option>
+            <option value="venture-capital">Venture capital</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="field" id="industry-other-field" hidden>
+          <label for="industry_other">Please specify</label>
+          <input type="text" id="industry_other" name="industry_other">
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="4"></textarea>
+        </div>
+        <button type="submit" class="btn btn-submit" id="submit-btn">Send message</button>
+        <p id="form-status"></p>
+      </form>
+    </section>
+
+    <footer>
+      <div class="footer-top">
+        <div class="footer-links">
+          <a href="/">Home</a>
+          <a href="/product">Product</a>
+          <a href="/company">Company</a>
+          <a href="/contact">Contact</a>
+          <a href="mailto:hello@labviq.com">hello@labviq.com</a>
+        </div>
+        <a class="social" href="https://www.linkedin.com/company/labviq" target="_blank" rel="noopener" aria-label="Labviq on LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/>
+          </svg>
+        </a>
+      </div>
+      <p class="footer-legal">
+        &copy; 2026 Labviq Limited. Registered in England &amp; Wales, company no. 17172067.<br>
+        Registered office: 9 Wells Apartments, 79 Sutherland Road, London, England, E17 6BH &middot; <a href="mailto:hello@labviq.com">hello@labviq.com</a>
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.18 });
+      document.querySelectorAll('.scroll-reveal').forEach(el => io.observe(el));
+    } else {
+      document.querySelectorAll('.scroll-reveal').forEach(el => el.classList.add('in-view'));
+    }
+
+    // Reveal the "specify" field only when Industry = Other
+    const industrySelect = document.getElementById('industry');
+    const otherField = document.getElementById('industry-other-field');
+    const otherInput = document.getElementById('industry_other');
+    industrySelect.addEventListener('change', () => {
+      const isOther = industrySelect.value === 'other';
+      otherField.hidden = !isOther;
+      otherInput.required = isOther;
+      if (!isOther) otherInput.value = '';
+    });
+
+    // Web3Forms async submission
+    const contactForm = document.getElementById('contact-form');
+    const submitBtn   = document.getElementById('submit-btn');
+    const formStatus  = document.getElementById('form-status');
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      formStatus.style.display = 'none';
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: new FormData(contactForm)
+        });
+        const data = await res.json();
+        if (data.success) {
+          formStatus.textContent = 'Message sent — we\'ll be in touch.';
+          formStatus.style.color = 'var(--ink-soft)';
+          contactForm.reset();
+          otherField.hidden = true;
+        } else {
+          throw new Error(data.message || 'Submission failed');
+        }
+      } catch (err) {
+        formStatus.textContent = 'Something went wrong. Please email hello@labviq.com directly.';
+        formStatus.style.color = 'rgba(255,120,120,0.85)';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send message';
+        formStatus.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
