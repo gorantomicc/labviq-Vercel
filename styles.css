@@ -297,6 +297,8 @@ h3 {
   font-size: 18px;
   color: var(--navy-deep);
   letter-spacing: 0.02em;
+  object-fit: cover;
+  overflow: hidden;
 }
 .founder .role {
   font-family: var(--mono);
